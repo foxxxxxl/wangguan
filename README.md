@@ -43,13 +43,13 @@ POST /v1/chat/completions    (支持 stream: true)
 
 ---
 
-## 五组免费模型
+## 四组模型服务商
 
 选模型页把可用模型分成 **5 组**，全部为直连上游，无中转：
 
-### 第 1 组 · 免登录直连（5 家厂商 + Kilo，开箱即用）
+### 第 1 组 · 免登录直连（6家厂商开箱即用）
 
-**这一组不需要注册、不需要填 Key**，装好就能直接调。共 5 家厂商 + 1 个 Kilo 免费池：
+**这一组不需要注册、不需要填 Key**，装好就能直接调。共 6 家厂商：
 
 | # | 厂商 | 归属 | 说明 | 上游地址 |
 |---|---|---|---|---|
@@ -58,7 +58,7 @@ POST /v1/chat/completions    (支持 stream: true)
 | 3 | **OVHcloud AI** | OVHcloud | 公共 AI Endpoints，无 SLA | `oai.endpoints.kepler.ai.cloud.ovh.net/v1` |
 | 4 | **BlockRun** | NVIDIA 托管 | `billing=free` 公共模型池 | `blockrun.ai/api/v1` |
 | 5 | **OpenCode Zen** | OpenCode | 匿名额度易耗尽，默认关闭 | `opencode.ai/zen/v1` |
-| — | **Kilo 免费池** | Kilo | 首页 Kilo 免费模型，归入本组 | — |
+| — | **Kilo 免费池** | Kilo | 首页 Kilo 免费模型，归入本组 |  `ai-gateway.kilo.ai/api/v1` |
 
 > **调用方式**：这些渠道的请求由你的设备**直接发往厂商服务器**，不经过任何中转。
 > 本地网关只做协议翻译（把各家的非标准格式转成 OpenAI 格式），请求链路仍是
@@ -99,27 +99,10 @@ POST /v1/chat/completions    (支持 stream: true)
 
 任何 OpenAI 兼容接口，填 Base URL + Key + 模型名即可接入。
 
-### 第 5 组 · 自定义中转站（多密钥轮换）
-
-同一个中转站可填多个 Key，请求时自动轮换，单 Key 失效不影响使用。
-
----
-
-## 白嫖页的另一分类
-
-白嫖页把渠道按获取方式分成三类（与选模型页的 5 组视角不同）：
-
-| 分类 | 含义 | 代表厂商 |
-|---|---|---|
-| **免登录直连** | 无需注册与 Key，开箱即用 | Pollinations、LLM7、OVHcloud、BlockRun、OpenCode Zen |
-| **免费额度类** | 拿到 Key 就有免费额度 | Cline、Gemini、硅基流动、OpenRouter、商汤、AMD、墨点、Agnes |
-| **签到类** | 每日签到领积分 | LobsterAI（有道）、Qoder（阿里系）、Trae（字节）、Loomy（讯飞）、MiniMax Code、ZCode（智谱） |
-
----
 
 ## 支持的供应商
 
-除上述渠道外，还内置了对以下专有协议的适配（不走标准 OpenAI 格式，需要协议转换）：
+内置了对以下专有协议的适配（不走标准 OpenAI 格式，需要协议转换）：
 
 | 供应商 | 协议特点 |
 |---|---|
@@ -175,32 +158,6 @@ scripts/
 
 ---
 
-## 构建
-
-本项目**不包含**基础 APK。构建需要你自备合法的应用安装包。
-
-```bash
-# 1. 准备密钥（仓库不含真实值）
-cat > secrets.json <<'EOF'
-{
-  "chatglm_sign_key": "<自行填写>",
-  "zhipu_sign_key": "<自行填写>"
-}
-EOF
-
-# 2. 注入密钥，生成 build/ 下的源码副本
-python scripts/inject_secrets.py
-
-# 3. 编译 Java -> dex，替换 assets，重建 APK
-export FOXO_BASE_APK=/path/to/base.apk
-python scripts/repack.py
-
-# 4. 签名
-apksigner sign --ks <your.keystore> --out app-signed.apk build/app-repacked.apk
-```
-
-`secrets.json` 已被 `.gitignore` 排除，**不要提交**。
-
 ### 密钥占位符
 
 源码中涉及上游私有签名密钥的位置使用占位符：
@@ -238,6 +195,10 @@ apksigner sign --ks <your.keystore> --out app-signed.apk build/app-repacked.apk
 
 感谢这些项目的作者。
 
+---
+
+---
+## 关注快手 中樂FOXO
 ---
 
 ## 免责声明
