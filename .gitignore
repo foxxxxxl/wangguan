@@ -5,6 +5,9 @@ build/
 *.dex
 *.jar
 
+# 安装包只通过 GitHub Releases 分发，不进仓库
+download/
+
 # 忽略密钥与签名
 secrets.json
 *.ks
